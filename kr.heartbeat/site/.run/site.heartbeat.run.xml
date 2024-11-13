@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="site.heartbeat" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="kr.heartbeat.site.SiteApplication" />
+    <module name="site" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
