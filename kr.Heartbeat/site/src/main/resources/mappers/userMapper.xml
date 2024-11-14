@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.heartbeat.mappers.user">
+	<select id="emailCheck" parameterType="String" resultType="kr.heartbeat.vo.UserVO">
+		SELECT * FROM user_tbl
+		WHERE email = #{email}
+	</select>
+	
+	<select id="nicknameCheck" parameterType="String" resultType="kr.heartbeat.vo.UserVO">
+		SELECT * FROM user_tbl
+		WHERE nickname = #{nickname}
+	</select>
+	
+	<select id="phoneCheck" parameterType="String" resultType="kr.heartbeat.vo.UserVO">
+		SELECT * FROM user_tbl
+		WHERE phone = #{phone}
+	</select>
+
+	<insert id="register" parameterType="kr.heartbeat.vo.UserVO">
+		INSERT INTO user_tbl (email, artist_id, pwd, name, nickname, birth, phone, profileimg, level, reg_date, up_date) 
+		VALUES (#{email}, #{artist_id}, #{pwd}, #{name}, #{nickname}, #{birth}, #{phone}, #{profileimg}, #{level}, now(), now())
+	</insert>
+</mapper>

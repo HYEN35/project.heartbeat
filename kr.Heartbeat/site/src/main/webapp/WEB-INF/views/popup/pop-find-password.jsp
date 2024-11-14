@@ -7,11 +7,11 @@
 	</div>
 	<div class="cntArea">
 		<div class="findCnt">
-			<form autocomplete="off">
-				<input type="text" class="txtBx" placeholder="이메일 입력">
-				<input type="text" class="txtBx" placeholder="이름 입력">
-				<input type="number" class="txtBx" placeholder="생년월일 6글자 입력">
-				<button type="button" class="btn-border" onclick="resultShow();">비밀번호 찾기</button>
+			<form acrtion="/member/loign/findPwd" method="post" name="findPwdForm"autocomplete="off">
+				<input type="text" class="txtBx" name="email" id="find-pwd-email" placeholder="이메일 입력">
+				<input type="text" class="txtBx" name="name" id="find-pwd-name" placeholder="이름 입력">
+				<input type="number" class="txtBx" name="birth" id="find-pwd-birth" placeholder="생년월일 8글자 입력">
+				<button type="submit" class="btn-border" onclick="resultShow(); return false;">비밀번호 찾기</button>
 			</form>
 		</div>
 		<div class="resultCnt">

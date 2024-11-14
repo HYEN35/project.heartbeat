@@ -34,5 +34,66 @@
             </div>
         </div>
     </div>
+
+	<div class="dimmed" onclick="popFindIdHide();popFindPasswordHide();"></div>
+
+	<!-- [D] 팝업 아이디찾기 -->
+	<div class="popup pop-find-id"><%@ include file="../popup/pop-find-id.jsp" %></div>
+	<!-- [D] 팝업 비밀번호찾기 -->
+	<div class="popup pop-find-password"><%@ include file="../popup/pop-find-password.jsp" %></div>
+
+	<script>
+		$(function(){
+			//loginError();
+		});
+		
+		//로그인 오류
+ 		function loginError(){
+			if(request.getAttribute("error") != null){ 
+				$('.error').css('display', 'block');
+			}
+		}
+
+		//팝업 아이디찾기
+		function popFindIdShow(){
+			$('.pop-find-id').show();
+			$('.dimmed').show();
+		}
+		function popFindIdHide(){
+			$('.pop-find-id').hide();
+			$('.dimmed').hide();
+		}
+
+		//팝업 비밀번호찾기
+		function popFindPasswordShow(){
+			$('.pop-find-password').show();
+			$('.dimmed').show();
+		}
+		function popFindPasswordHide(){
+			$('.pop-find-password').hide();
+			$('.dimmed').hide();
+		}
+
+		//비밀번호, 아이디 찾기 결과 보기
+		function resultShow(){
+			var name = $("#findIdName").val();
+			var birth = $("#findIdBirth").val();
+			var phone = $("#findIdPhone").val();
+			var resultEmail = "temp@email.com";
+			
+
+			if (name && birth && phone) {
+				$("#emailFormBtn").submit();
+				$(".resultCnt #userName").html(name)
+				$(".resultCnt #findEmail").html(resultEmail)
+				$('.resultCnt').show();
+			} else {
+				alert("모든 필드를 입력해 주세요.");
+			}
+
+
+			console.log(name, birth, phone)
+		}
+	</script>
 </body>
 </html>

@@ -7,16 +7,16 @@
 	</div>
 	<div class="cntArea">
 		<div class="findCnt">
-			<form autocomplete="off">
-				<input type="text" class="txtBx" placeholder="이름 입력">
-				<input type="number" class="txtBx" placeholder="생년월일 6글자 입력">
-				<input type="number" class="txtBx" placeholder="핸드폰번호 입력">
-				<button type="button" class="btn-border" onclick="resultShow();">이메일 찾기</button>
+			<form acrtion="/member/loign/findEmail" method="post" name="findEmailForm" autocomplete="off">
+				<input type="text" class="txtBx" name="name" id="findIdName" placeholder="이름 입력">
+				<input type="number" class="txtBx" name="birth" id="findIdBirth" placeholder="생년월일 8글자 입력">
+				<input type="number" class="txtBx" name="phone" id="findIdPhone" placeholder="핸드폰번호 입력">
+				<button type="button" class="btn-border" id="emailFormBtn" onclick="resultShow();">이메일 찾기</button>
 			</form>
 		</div>
 		<div class="resultCnt">
 			<p class="txt">
-				<i id="userName">홍길동</i>님의 이메일은 <i id="findId">abcd@google.com</i>입니다.
+				<i id="userName">홍길동</i>님의 이메일은 <br><i id="findEmail">abcd@google.com</i>입니다.
 			</p>
 		</div>
 	</div>
