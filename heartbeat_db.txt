@@ -1,0 +1,170 @@
+CREATE TABLE artist_tbl (
+    artist_id int NOT NULL COMMENT '아티스트_아이디',
+    art_name varchar(100) NOT NULL COMMENT '아티스트_이름',
+    fan varchar(45) NOT NULL COMMENT '팬덤',
+    art_img varchar(255) NOT NULL COMMENT '이미지_주소',
+    PRIMARY KEY (artist_id)
+) COMMENT = '아티스트';
+
+CREATE TABLE comment_tbl (
+    comment_id int NOT NULL COMMENT '댓글_아이디',
+    email varchar(100) NOT NULL COMMENT '이메일',
+    post_id int NOT NULL COMMENT '게시물_아이디',
+    comment text NOT NULL COMMENT '댓글_내용',
+    comment_date datetime NOT NULL COMMENT '작성일',
+    PRIMARY KEY (comment_id)
+) COMMENT = '댓글';
+
+CREATE TABLE cost_tbl (
+    level tinyint NOT NULL,
+    cost int NOT NULL
+) COMMENT = '구독가격';
+
+CREATE TABLE hashtag_tbl (
+    hashtag_id int NOT NULL COMMENT '해시태그_아이디',
+    music_id int NOT NULL COMMENT '음악_아이디',
+    artist_id int NOT NULL COMMENT '아티스트_아이디',
+    hashtag_name varchar(50) NOT NULL COMMENT '해시태그_이름',
+    PRIMARY KEY (hashtag_id)
+) COMMENT = '해시태그';
+
+CREATE TABLE music_role_tbl (
+    mr_key int NOT NULL AUTO_INCREMENT COMMENT '음악 역할',
+    music_id int NOT NULL COMMENT '음악_아이디',
+    email varchar(50) NOT NULL COMMENT '이메일',
+    PRIMARY KEY (mr_key)
+) COMMENT = '음악역할테이블';
+
+CREATE TABLE music_tbl (
+    music_id int NOT NULL COMMENT '음악_아이디',
+    artist_id int NOT NULL COMMENT '아티스트_아이디',
+    music_name varchar(45) NOT NULL COMMENT '곡명',
+    track varchar(45) NOT NULL COMMENT '트랙_이름',
+    playtime int NOT NULL COMMENT '재생시간',
+    PRIMARY KEY (music_id)
+) COMMENT = '음악리스트';
+
+CREATE TABLE post_tbl (
+    post_id int NOT NULL COMMENT '게시물_아이디',
+    email varchar(100) NOT NULL COMMENT '이메일',
+    post_title varchar(100) NOT NULL COMMENT '게시물_제목',
+    content text NOT NULL COMMENT '게시물_내용',
+    post_img varchar(100) DEFAULT NULL COMMENT '게시물이미지',
+    post_date datetime NOT NULL COMMENT '작성일',
+    PRIMARY KEY (post_id)
+) COMMENT = '게시물';
+
+CREATE TABLE role_tbl (
+    role_id int NOT NULL COMMENT '역할_아이디',
+    role_name varchar(50) NOT NULL COMMENT '역할_이름',
+    PRIMARY KEY (role_id)
+) COMMENT = '역할';
+
+CREATE TABLE subscription_tbl (
+    level tinyint NOT NULL COMMENT '구독_등급',
+    email varchar(100) NOT NULL COMMENT '이메일',
+    start_date date NOT NULL COMMENT '구독_시작날짜',
+    end_date date NOT NULL COMMENT '구독_종료날짜',
+    PRIMARY KEY (level)
+) COMMENT = '구독';
+
+CREATE TABLE user_role_tbl (
+    ur_key int NOT NULL AUTO_INCREMENT COMMENT '유저역할',
+    email varchar(50) NOT NULL COMMENT '이메일',
+    role_id int NOT NULL COMMENT '역할_아이디',
+    PRIMARY KEY (ur_key)
+) COMMENT = '유저_역할';
+
+CREATE TABLE user_tbl (
+    email varchar(100) NOT NULL COMMENT '이메일',
+    artist_id int NOT NULL COMMENT '아티스트_아이디',
+    pwd varchar(20) NOT NULL COMMENT '비밀번호',
+    name varchar(50) NOT NULL COMMENT '이름',
+    nickname varchar(20) NOT NULL COMMENT '닉네임',
+    birth date NOT NULL COMMENT '생년월일',
+    phone char(13) NOT NULL COMMENT '휴대전화',
+    profileimg varchar(100) DEFAULT NULL COMMENT '프로필사진',
+    level int DEFAULT NULL COMMENT '구독_등급',
+    reg_date datetime NOT NULL COMMENT '생성일',
+    up_date datetime NOT NULL COMMENT '수정일',
+    PRIMARY KEY (email)
+) COMMENT = '유저';
+
+
+ALTER TABLE artist_tbl ADD FOREIGN KEY (artist_id) REFERENCES user_tbl (artist_id);
+ALTER TABLE comment_tbl ADD FOREIGN KEY (email) REFERENCES user_tbl (email);
+ALTER TABLE comment_tbl ADD FOREIGN KEY (post_id) REFERENCES post_tbl (post_id);
+ALTER TABLE cost_tbl ADD FOREIGN KEY (level) REFERENCES subscription_tbl (level);
+ALTER TABLE hashtag_tbl ADD FOREIGN KEY (music_id) REFERENCES music_tbl (music_id);
+ALTER TABLE hashtag_tbl ADD FOREIGN KEY (artist_id) REFERENCES music_tbl (artist_id);
+ALTER TABLE music_role_tbl ADD FOREIGN KEY (email) REFERENCES user_tbl (email);
+ALTER TABLE music_role_tbl ADD FOREIGN KEY (music_id) REFERENCES music_tbl (music_id);
+ALTER TABLE music_tbl ADD FOREIGN KEY (artist_id) REFERENCES artist_tbl (artist_id);
+ALTER TABLE post_tbl ADD FOREIGN KEY (email) REFERENCES user_tbl (email);
+ALTER TABLE subscription_tbl ADD FOREIGN KEY (email) REFERENCES user_tbl (email);
+ALTER TABLE user_role_tbl ADD FOREIGN KEY (email) REFERENCES user_tbl (email);
+ALTER TABLE user_role_tbl ADD FOREIGN KEY (role_id) REFERENCES role_tbl (role_id);
+ALTER TABLE user_tbl ADD FOREIGN KEY (artist_id) REFERENCES artist_tbl (artist_id);
+
+
+======쿼리 수정 ========
+ALTER TABLE post_tbl
+ADD COLUMN artist_id INT NOT NULL COMMENT'아티스트_아이디' AFTER email;
+
+ALTER TABLE post_tbl
+ADD COLUMN nickname VARCHAR(20) NOT NULL COMMENT'닉네임' AFTER artist_id;
+
+
+===== user_tbl에 비빌번호 수정 =====
+
+ALTER TABLE user_tbl 
+MODIFY COLUMN pwd VARCHAR(120) NOT NULL	COMMENT '비밀번호';
+
+
+=========== user_tbl, artist_tbl 외래키 수정 ==============
+-- 1. user_tbl에서 artist_id가 artist_tbl을 참조하는 외래키 설정
+ALTER TABLE user_tbl
+ADD CONSTRAINT fk_user_artist FOREIGN KEY (artist_id) REFERENCES artist_tbl (artist_id);
+
+-- 2. artist_tbl에서 user_tbl을 참조하는 외래키 제거
+ALTER TABLE artist_tbl
+DROP FOREIGN KEY artist_tbl_ibfk_1;
+
+
+좋아요 테이블 
+CREATE TABLE `like_tbl` (
+	like_id		INT 	AUTO_INCREMENT		COMMENT'좋아요아이디',
+	email			VARCHAR(100)	NOT NULL	COMMENT'이메일',
+	post_id 		INT 				NOT NULL COMMENT '게시물_아이디',
+	PRIMARY KEY (like_id)
+)COMMENT ='좋아요 테이블';
+
+ALTER TABLE `like_tbl` ADD CONSTRAINT `FK_user_tbl_TO_like_tbl_1` FOREIGN KEY (
+	`email`
+)
+REFERENCES `user_tbl` (
+	`email`
+);
+
+ALTER TABLE `like_tbl` ADD CONSTRAINT `FK_post_tbl_TO_like_tbl_1` FOREIGN KEY (
+	`post_id`
+)
+REFERENCES `post_tbl` (
+	`post_id`
+);
+
+
+-- 탈퇴 유저 테이블 
+CREATE TABLE delete_user_tbl (
+    del_email varchar(100) NOT NULL COMMENT '이메일',
+    del_artist_id int NOT NULL COMMENT '아티스트_아이디',
+    del_pwd varchar(20) NOT NULL COMMENT '비밀번호',
+    del_name varchar(50) NOT NULL COMMENT '이름',
+    del_nickname varchar(20) NOT NULL COMMENT '닉네임',
+    del_birth date NOT NULL COMMENT '생년월일',
+    del_phone char(13) NOT NULL COMMENT '휴대전화',
+    del_profileimg varchar(100) DEFAULT NULL COMMENT '프로필사진',
+    del_level int DEFAULT NULL COMMENT '구독_등급',
+    del_reg_date datetime NOT NULL COMMENT '생성일',
+    del_date datetime NOT NULL COMMENT '탈퇴일'
+) COMMENT = '탈퇴유저';

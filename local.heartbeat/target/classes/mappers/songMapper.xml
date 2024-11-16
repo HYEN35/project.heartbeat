@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.heartbeat.music.persistence.SongMapper">
+
+	<!-- 노래 저장 -->
+    <insert id="insertSong" parameterType="kr.heartbeat.vo.SongVO">
+	    INSERT INTO songs (spotify_id, title, artist, album, hashtag, created_at)
+	    VALUES (#{spotify_id}, #{title}, #{artist}, #{album}, #{hashtag}, #{created_at})
+	</insert>
+		
+	<!-- spotify_id로 노래 조회 -->
+    <select id="selectSongBySpotifyId" parameterType="string" resultType="kr.heartbeat.vo.SongVO">
+        SELECT spotify_id, title, artist, album, hashtag, created_at
+        FROM songs
+        WHERE spotify_id = #{spotifyId}
+    </select>
+    
+    <!-- 곡 추천 쿼리 추가 -->
+    <select id="selectSongsByHashtags" resultType="kr.heartbeat.vo.SongVO">
+	    SELECT * FROM songs WHERE hashtag IN
+	    <foreach item="hashtag" collection="list" open="(" separator="," close=")">
+	        #{hashtag}
+	    </foreach>
+	    LIMIT 10
+	</select>
+</mapper>
+
+
