@@ -15,5 +15,6 @@
 			"username": "dba",
 			"password": "dbapwd"
 		}
-	]
+	],
+	"java.compile.nullAnalysis.mode": "automatic"
 }
