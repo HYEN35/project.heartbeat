@@ -59,6 +59,13 @@ public class HomeController {
 		 model.addAttribute("pageTitle", "마이페이지");
 		 return "heartbeat/mypage"; 
 	}
+
+	@RequestMapping(value="/testpage", method = RequestMethod.GET)
+	public String testpage(Model model) {
+		model.addAttribute("pageName", "테스트페이지 - HeartBeat");
+		model.addAttribute("pageTitle", "테스트페이지");
+		return "heartbeat/testpage";
+	}
 	 
 	@RequestMapping(value = "/paymentResult")
 	public String paymentResult(
@@ -111,5 +118,7 @@ public class HomeController {
 		model.addAttribute("pageTitle", "댓글 확인");
 		return "admin/comment"; 
 	}
+
+
 
 }

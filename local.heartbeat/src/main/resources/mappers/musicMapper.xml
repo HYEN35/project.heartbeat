@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.heartbeat.mappers.music">
+
+	<select id="getMusicListByHashtags" parameterType="list" resultType="kr.heartbeat.vo.MusicVO">
+		SELECT
+			m.music_id,
+			m.music_name,
+			m.track,
+			m.playtime,
+			a.artist_id,
+			a.art_name,
+			a.fan,
+			a.art_img
+		FROM
+			hashtag_tbl h
+		JOIN
+			music_tbl m ON h.music_id = m.music_id
+		JOIN
+			artist_tbl a ON m.artist_id = a.artist_id
+		WHERE
+			h.hashtag_id IN
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+
+	<select id="findMusicByHashtags" parameterType="list" resultType="kr.heartbeat.vo.MusicVO">
+		SELECT *
+		FROM music_tbl m
+		JOIN hashtag_tbl h ON m.music_id = h.music_id
+		WHERE h.hashtag_id IN
+		<foreach item="id" collection="list" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+
+	<select id="findAllMusic" parameterType="list" resultType="kr.heartbeat.vo.MusicVO">
+		SELECT * FROM music_tbl
+	</select>
+
+
+	<resultMap id="musicResultMap" type="kr.heartbeat.vo.PlaylistDTO">
+		<id property="music_id" column="music_id"/>
+		<result property="artist_id" column="artist_id"/>
+		<result property="music_name" column="music_name"/>
+		<result property="track" column="track"/>
+		<result property="playtime" column="playtime"/>
+		<result property="art_name" column="art_name"/>
+		<result property="art_img" column="art_img"/>
+		<result property="hashtag_id" column="hashtag_id"/>
+		<result property="hashtag_name" column="hashtag_name"/>
+	</resultMap>
+
+	<select id="findAllMusicAjax" parameterType="list" resultMap="musicResultMap">
+		SELECT DISTINCT
+			m.music_id,
+			m.artist_id,
+			m.music_name,
+			m.track,
+			m.playtime,
+			a.art_name,
+			a.art_img,
+			h.hashtag_name,
+			h.hashtag_id
+		FROM
+			music_tbl m
+		JOIN
+			artist_tbl a ON m.artist_id = a.artist_id
+		JOIN
+			hashtag_tbl h ON m.music_id = h.music_id
+		<where>
+			<if test="hashtags != null and hashtags.size() > 0">
+				h.hashtag_name IN
+				<foreach item="hashtag" collection="hashtags.split(',')" open="(" separator="," close=")">
+					#{hashtag, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,177 @@
+musicListShow();를 클릭 했을 때
+itemWrapdml item으로
+music_tbl에 있는 리스트를 다 출력
+
+playlist.jsp
+<div class="btnCnt">
+    <button type="button" onclick="musicListShow()" class="btn-full">뮤직리스트 보기</button>
+</div>
+<ul class="itemWrap musicList">
+    <li class="item all">
+        <input type="checkbox" id="allBtn" class="check" name="music">
+    </li>
+    <li class="item">
+        <input type="checkbox" class="check" name="music">
+        <div class="album"><img src="#none"style="width:100%;height:100%;"></div>
+        <div class="arti">
+            <i class="tit">노래제목</i>
+            <i class="name">가수</i>
+        </div>
+    </li>
+</ul>
+
+
+
+musicMapper.xml
+<!--전체노래출력-->
+<select id="findMusicList" parameterType="String" resultType="kr.heartbeat.vo.MusicVO">
+    SELECT * FROM music_tbl
+</select>
+
+
+MusicVO.java
+@Data
+public class MusicVO {
+	private int music_id;
+	private String artist_id;
+	private String music_name;
+	private String track;
+	private int playtime;
+}
+
+
+MusicController.java
+@Controller
+public class MusicController {
+	@GetMapping("/musicList")
+	public String musicList(Model model){
+
+		return "heartbeat/playlist";
+	}
+}
+
+
+playlist.jsp는 이런 방식으로 작업하는걸로 수정
+<c:forEach var="music" items="${music}">
+    <li class="item">
+        <input type="checkbox" class="check" name="music">
+        <div class="album"><img src="${album.images[0].url}" alt="Album Cover" class="album-cover" style="width:100%;height:100%;"></div>
+        <div class="arti">
+            <i class="tit">${music.music_name}</i>
+            <i class="name">${music.artist_id}</i>
+        </div>
+    </li>
+</c:forEach>
+
+
+
+// AJAX 요청
+fetch('/music/findMusicList')
+    .then(response => response.json())
+    .then(data => {
+        const musicList = document.querySelector('.itemWrap.musicList');
+        musicList.innerHTML = ''; // 기존 리스트 초기화
+
+        data.forEach(music => {
+            const item = `
+            <li class="item">
+                <input type="checkbox" class="check" name="music">
+                <div class="album">
+                    <img src="#none" style="width:100%;height:100%;">
+                </div>
+                <div class="arti">
+                    <i class="tit">${music.music_name}</i>
+                    <i class="name">${music.artist_id}</i>
+                </div>
+            </li>`;
+            musicList.innerHTML += item;
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching music list:', error);
+    });
+
+
+
+
+
+<ul class="itemWrap musicList">
+    <li class="item all">
+        <input type="checkbox" id="allBtn" class="check" name="music">
+    </li>
+    <c:forEach var="music" items="${music}">
+        <li class="item">
+            <input type="checkbox" class="check" name="music">
+            <div class="album">
+                <!-- 앨범 커버 이미지 URL이 없다면 기본 이미지 표시 -->
+                <img src="${music.track != null ? music.track : '/img/user.png'}"
+                     alt="Album Cover" class="album-cover" style="width:100%;height:100%;">
+            </div>
+            <div class="arti">
+                <i class="tit">${music.music_name}</i>
+                <i class="name">${music.artist_id}</i>
+            </div>
+        </li>
+    </c:forEach>
+</ul>
+
+
+musicListShow()를 클릭 했을 때 ajax로
+
+$('.section-list .itemWrap').show();
+<c:forEach var="music" items="${music}">
+    <li class="item">
+        <input type="checkbox" class="check" name="music">
+        <div class="arti">
+            <i class="tit">${music.music_name}</i>
+            <i class="name">${music.track}</i>
+        </div>
+    </li>
+</c:forEach>
+
+여기에 값이 입력되서 나오게
+
+
+@Controller
+public class MusicController {
+	@Autowired
+	private SqlSession sqlSession;
+
+	@GetMapping("/music/playlist")
+	public String musicList(Model model) {
+		// 매퍼 호출
+		List<MusicVO> musicList = sqlSession.selectList("findMusicList");
+		// 모델에 데이터 추가
+		model.addAttribute("music", musicList);
+		return "heartbeat/musicList"; // JSP 경로
+	}
+}
+
+
+function musicListShow() {
+    $('.section-list .itemWrap').show();
+}
+
+
+jsp ajax 부분을 이런식으로 수정하고 싶어
+html이 통으로 들어가는게 아니라
+노래 제목, 아티스트 이름만 받아서 넣고 싶어
+
+function musicListShow() {
+    $.ajax({
+        url: '/music/playlist', // Controller의 매핑 경로
+        method: 'GET',
+        success: function(data) {
+            // 응답 데이터를 .section-list .itemWrap에 삽입 후 보여줌
+            <div class="arti">
+                <i class="tit">${music.music_name}</i>
+                <i class="name">${music.track}</i>
+            </div>
+            $('.section-list .itemWrap').html(data).show();
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching music list:', error);
+            alert('Failed to load music list. Please try again later.');
+        }
+    });
+}

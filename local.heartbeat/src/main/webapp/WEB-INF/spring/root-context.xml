@@ -35,18 +35,15 @@
 		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
 	</bean>
 	
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-	    <property name="basePackage" value="kr.heartbeat.music.persistence" />
-	</bean>
 
-	<context:component-scan base-package="kr.heartbeat" />
+	<context:component-scan base-package="kr.heartbeat.vo" />
 	<context:component-scan base-package="kr.heartbeat.service" />
 	<context:component-scan base-package="kr.heartbeat.persistence" />
-	<context:component-scan base-package="kr.heartbeat.vo" />
-	<context:component-scan base-package="kr.heartbeat.community.persistence" />
 	<context:component-scan base-package="kr.heartbeat.community.service" />
-	<context:component-scan base-package="kr.heartbeat.music.persistence" />
+	<context:component-scan base-package="kr.heartbeat.community.persistence" />
+	<context:component-scan base-package="kr.heartbeat.music.config" />
 	<context:component-scan base-package="kr.heartbeat.music.service" />
+	<context:component-scan base-package="kr.heartbeat.music.persistence" />
 	
 	
 </beans>

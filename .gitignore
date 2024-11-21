@@ -326,3 +326,4 @@ test/Servers/Tomcat v9.0 Server at localhost-config/context.xml
 test/Servers/Tomcat v9.0 Server at localhost-config/server.xml
 test/Servers/Tomcat v9.0 Server at localhost-config/tomcat-users.xml
 test/Servers/Tomcat v9.0 Server at localhost-config/web.xml
+local.heartbeat.zip

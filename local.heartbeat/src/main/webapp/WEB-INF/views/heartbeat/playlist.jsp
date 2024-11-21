@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../include/layout.jsp" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <body>
 	<div class="inner service playlist" data-name="playlist">
@@ -10,115 +11,31 @@
 				<h2 id="title" class="title"><%=pageTitle %></h2>
 				<div class="cntArea">
 					<div class="section-tag">
-						<p class="noti">해시태그를 3개 선택해주세요! <br>해시태그를 선택하면 당신에게 맞는 노래를 선곡해드립니다♬</p>
-						<ul class="tagList">
-							<li class="tag">#신나는</li>
-							<li class="tag">#비오는날</li>
-							<li class="tag">#차분한</li>
-							<li class="tag">#조용한</li>
-							<li class="tag">#파티</li>
-							<li class="tag">#운동</li>
-							<li class="tag">#명상</li>
-							<li class="tag">#휴식</li>
-							<li class="tag">#졸릴때</li>
-							<li class="tag">#노동요</li>
-						</ul>
-						<div class="btnCnt">
-							<button type="button" id="listShow" class="btn-full" onclick="playlistShow();">플레이리스트 보기</button>
-						</div>
+                        <p class="noti">해시태그를 3개 선택해주세요! <br>해시태그를 선택하면 당신에게 맞는 노래를 선곡해드립니다♬</p>
+                        <ul class="tagList">
+                            <li class="tag" data-id="100">#신나는</li>
+                            <li class="tag" data-id="101">#비오는날</li>
+                            <li class="tag" data-id="102">#차분한</li>
+                            <li class="tag" data-id="103">#조용한</li>
+                            <li class="tag" data-id="104">#파티</li>
+                            <li class="tag" data-id="105">#운동</li>
+                            <li class="tag" data-id="106">#명상</li>
+                            <li class="tag" data-id="107">#휴식</li>
+                            <li class="tag" data-id="108">#졸릴때</li>
+                            <li class="tag" data-id="109">#노동요</li>
+                        </ul>
+                        <div class="btnCnt">
+                            <button type="submit" class="btn-full" onclick="playListShow();">뮤직리스트 보기</button>
+                        </div>
 					</div>
-					<div class="section-list" style="display:none;">
+					<div class="section-list">
 						<div>
 							<div id="listTitle" class="listName"></div>
 							<div class="listBx">
 								<div class="btnWrap">
 									<button type="button" class="btn-under">전체듣기</button>
 								</div>
-								<ul class="itemWrap">
-									<li class="item all">
-										<input type="checkbox" id="allBtn" class="check" name="music">
-									</li>
-									<li class="item">
-										<input type="checkbox" class="check" name="music">
-										<div class="album"><i></i></div>
-										<div class="arti">
-											<i class="tit">노래제목</i>
-											<i class="name">가수</i>
-										</div>
-									</li>
-									<li class="item">
-										<input type="checkbox" class="check" name="music">
-										<div class="album"><i></i></div>
-										<div class="arti">
-											<i class="tit">노래제목</i>
-											<i class="name">가수</i>
-										</div>
-									</li>
-									<li class="item">
-										<input type="checkbox" class="check" name="music">
-										<div class="album"><i></i></div>
-										<div class="arti">
-											<i class="tit">노래제목</i>
-											<i class="name">가수</i>
-										</div>
-									</li>
-									<li class="item">
-										<input type="checkbox" class="check" name="music">
-										<div class="album"><i></i></div>
-										<div class="arti">
-											<i class="tit">노래제목</i>
-											<i class="name">가수</i>
-										</div>
-									</li>
-									<li class="item">
-										<input type="checkbox" class="check" name="music">
-										<div class="album"><i></i></div>
-										<div class="arti">
-											<i class="tit">노래제목</i>
-											<i class="name">가수</i>
-										</div>
-									</li>
-									<li class="item">
-										<input type="checkbox" class="check" name="music">
-										<div class="album"><i></i></div>
-										<div class="arti">
-											<i class="tit">노래제목</i>
-											<i class="name">가수</i>
-										</div>
-									</li>
-									<li class="item">
-										<input type="checkbox" class="check" name="music">
-										<div class="album"><i></i></div>
-										<div class="arti">
-											<i class="tit">노래제목</i>
-											<i class="name">가수</i>
-										</div>
-									</li>
-									<li class="item">
-										<input type="checkbox" class="check" name="music">
-										<div class="album"><i></i></div>
-										<div class="arti">
-											<i class="tit">노래제목</i>
-											<i class="name">가수</i>
-										</div>
-									</li>
-									<li class="item">
-										<input type="checkbox" class="check" name="music">
-										<div class="album"><i></i></div>
-										<div class="arti">
-											<i class="tit">노래제목</i>
-											<i class="name">가수</i>
-										</div>
-									</li>
-									<li class="item">
-										<input type="checkbox" class="check" name="music">
-										<div class="album"><i></i></div>
-										<div class="arti">
-											<i class="tit">노래제목</i>
-											<i class="name">가수</i>
-										</div>
-									</li>
-								</ul>
+								<ul class="itemWrap" id="musicList"></ul>
 							</div>
 						</div>
 					</div>
@@ -129,11 +46,71 @@
 
 	<div class="dimmed" onclick="popAlertCheckHide()"></div>
 	<script>
-		$(function(){
+		$(function() {
 			colorRandom();
 			tagSelect();
 			selectAll();
 		});
+
+		function playListShow() {
+			var selectedTags = $('.tagList .tag.on').length;
+            var selectedTagArray = [];
+            var selectedTagIdArray = [];
+
+            $('.tagList .tag.on').each(function() {
+                var tagTxt = $(this).text();
+                var tagId = $(this).data('id');
+                selectedTagArray.push(tagTxt);
+                selectedTagIdArray.push(tagId);
+            });
+
+            console.log("******선택된 해시태그 :", selectedTagArray);
+
+            var wrappedTagArray = selectedTagArray.map(function(tagTxt) {
+                return '<i>' + tagTxt + '</i>';
+            });
+
+            $('#listTitle').empty().append(wrappedTagArray.join(' '));  // 중복 방지 및 새로 갱신
+
+            if (selectedTags < 1) {
+                alert('해시태그를 선택해 주세요! 해시태그는 3개를 선택해주세요.');
+            }
+            else if (selectedTags < 1) {
+                alert('해시태그는 1개를 선택해주세요.');
+            }
+            else {
+                $.ajax({
+                    type: 'GET',
+                    url: '/music/playlist',
+                    //data: { 'hashtags[]' : selectedTagArray.join(',') },
+					data: JSON.stringify(selectedTagArray),
+					contentType: 'application/json',
+                    success: function(response) {
+                        console.log('************Response:', response);
+
+                        // 선택된 해시태그에 해당하는 데이터만 필터링
+                        var filteredResponse = response.filter(item =>
+                            selectedTagArray.includes(item.hashtag_name) // selectedTagArray 사용
+                        );
+
+                        var html = '';
+                        filteredResponse.forEach(function(music) {
+                            html += '<li style="display:block;width:100%;margin-bottom:10px">';
+                            html += '   <p><strong>['+ music.hashtag_name + ']</strong> ' + music.art_name + ' - ' + music.music_name + '</p>';
+                            html += '</li>';
+                        });
+
+                        $('#musicList').empty().append(html);
+                        $('.section-list').show();
+                    },
+                    error: function(xhr, status, error) {
+                        //alert('음악 리스트를 가져오는데 실패했습니다. 다시 시도해주세요.');
+                        console.log('****** 요청 실패 : ' + status + ' ***** 에러 : ' + error);
+                        console.error("Error Details:", xhr.responseText);
+                    }
+                });
+            }
+		}
 		
 		// 해시태그 랜덤 컬러 설정
 		function colorRandom() {
@@ -172,7 +149,7 @@
 			}
 
 			function setRandomColors() {
-				$('.tag').each(function () {
+				$('.tag').each(function() {
 					const color = getRandomDarkColor(); // 어두운 랜덤 색상 얻기
 					$(this).css('background-color', color);
 
@@ -184,15 +161,15 @@
 
 			setRandomColors();
 
-			$('#tagReset').on('click', function () {
+			$('#tagReset').on('click', function() {
 				setRandomColors();
 				$('.tagList .tag').removeClass('on');
 				$('#listTitle').empty();  // 선택된 태그 초기화
 			});
 		}
-
+		
 		// 해시태그 3개까지 선택 가능하도록 제한
-		function tagSelect(){
+		function tagSelect() {
 			var maxSelection = 3;
 
 			$('.tagList .tag').on('click', function() {
@@ -206,33 +183,6 @@
 					}
 				}
 			});
-		}
-
-		// 플레이리스트 보기 기능
-		function playlistShow(){
-			var selectedTags = $('.tagList .tag.on').length;
-			var selectedTagArray = [];
-
-			$('.tagList .tag.on').each(function() {
-				var tagTxt = $(this).text();
-				selectedTagArray.push(tagTxt);
-			});
-
-			var wrappedTagArray = selectedTagArray.map(function(tagTxt) {
-				return '<i>' + tagTxt + '</i>';
-			});
-
-			$('#listTitle').empty().append(wrappedTagArray.join(' '));  // 중복 방지 및 새로 갱신
-
-			if (selectedTags < 1) {
-				alert('해시태그를 선택해 주세요! 해시태그는 3개를 선택해주세요.');
-			} 
-			else if (selectedTags < 3) {
-				alert('해시태그는 3개를 선택해주세요.');
-			} 
-			else {
-				$('.section-list').show();
-			}
 		}
 
 		function selectAll() {

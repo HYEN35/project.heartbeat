@@ -7,17 +7,4 @@
 	<select id="login" resultType="kr.heartbeat.vo.UserVO">
 		select * from user_tbl where email = #{email} and pwd = #{pwd}
 	</select>
-
-
 </mapper>
-
-
-
-
-
-
-
-
-
-
-

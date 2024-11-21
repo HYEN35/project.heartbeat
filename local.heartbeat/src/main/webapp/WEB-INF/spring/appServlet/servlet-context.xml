@@ -41,8 +41,6 @@
 	<context:component-scan base-package="kr.heartbeat.community.controller" />
 	<context:component-scan base-package="kr.heartbeat.music.controller" />
 	
-	
-	
 </beans:beans>
 
 
