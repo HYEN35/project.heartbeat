@@ -42,9 +42,6 @@
 				<li class="item">
 					<a href="${pageContext.request.contextPath}/mypage" class="<%=mypage %>"><i class="fa-solid fa-user-pen"></i>마이페이지</a>
 				</li>
-				<li class="item">
-					<a href="${pageContext.request.contextPath}/testpage" class="<%=testpage %>">테스트페이지</a>
-				</li>
 			</ul>
 		</div>
 	</div>

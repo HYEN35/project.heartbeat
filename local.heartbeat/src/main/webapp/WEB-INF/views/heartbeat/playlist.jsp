@@ -26,15 +26,13 @@
                         </ul>
                         <div class="btnCnt">
                             <button type="submit" class="btn-full" onclick="playListShow();">뮤직리스트 보기</button>
+                            <button type="submit" class="btn-border" onclick="playListReset();">RESET</button>
                         </div>
 					</div>
-					<div class="section-list">
+					<div class="section-list" style="display:none">
 						<div>
 							<div id="listTitle" class="listName"></div>
 							<div class="listBx">
-								<div class="btnWrap">
-									<button type="button" class="btn-under">전체듣기</button>
-								</div>
 								<ul class="itemWrap" id="musicList"></ul>
 							</div>
 						</div>
@@ -51,6 +49,13 @@
 			tagSelect();
 			selectAll();
 		});
+
+		function playListReset(){
+		    $('#listTitle').empty();
+		    $('#musicList').empty();
+		    $('.section-list').hide();
+		    $('.tagList .tag').removeClass('on');
+		}
 
 		function playListShow() {
 			var selectedTags = $('.tagList .tag.on').length;
@@ -82,29 +87,41 @@
                 $.ajax({
                     type: 'GET',
                     url: '/music/playlist',
-                    //data: { 'hashtags[]' : selectedTagArray.join(',') },
-					data: JSON.stringify(selectedTagArray),
+                    data: {
+                        'hashtag1': selectedTagArray[0], // 첫 번째 해시태그
+                        'hashtag2': selectedTagArray[1], // 두 번째 해시태그
+                        'hashtag3': selectedTagArray[2]  // 세 번째 해시태그
+                    },
 					contentType: 'application/json',
                     success: function(response) {
-                        console.log('************Response:', response);
+                        //console.log('************Response:', response);
 
-                        // 선택된 해시태그에 해당하는 데이터만 필터링
-                        var filteredResponse = response.filter(item =>
-                            selectedTagArray.includes(item.hashtag_name) // selectedTagArray 사용
-                        );
+                        var playlist = response.playlist;
 
-                        var html = '';
-                        filteredResponse.forEach(function(music) {
-                            html += '<li style="display:block;width:100%;margin-bottom:10px">';
-                            html += '   <p><strong>['+ music.hashtag_name + ']</strong> ' + music.art_name + ' - ' + music.music_name + '</p>';
-                            html += '</li>';
-                        });
+                        if (Array.isArray(playlist)) {
+                            // 선택된 해시태그에 해당하는 데이터만 필터링
+                            var filteredResponse = playlist.filter(item =>
+                                selectedTagArray.includes(item.hashtag_name) // selectedTagArray 사용
+                            );
 
-                        $('#musicList').empty().append(html);
-                        $('.section-list').show();
+                            var html = '';
+                            filteredResponse.forEach(function(music) {
+                                html += '<li class="item">'
+                                html += '	<div class="album"><i></i></div>'
+                                html += '	<div class="arti">'
+                                html += '		<i class="name">'+music.art_name+'</i>'
+                                html += '		<i class="tit">'+music.music_name+'</i>'
+                                html += '	</div>'
+                                html += '</li>'
+                            });
+
+                            $('#musicList').empty().append(html);
+                            $('.section-list').show();
+                        } else {
+                            console.log("응답이 배열이 아닙니다:", response);
+                        }
                     },
                     error: function(xhr, status, error) {
-                        //alert('음악 리스트를 가져오는데 실패했습니다. 다시 시도해주세요.');
                         console.log('****** 요청 실패 : ' + status + ' ***** 에러 : ' + error);
                         console.error("Error Details:", xhr.responseText);
                     }

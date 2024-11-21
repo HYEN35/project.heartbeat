@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import kr.heartbeat.music.persistence.HashtagPersistence;
 import kr.heartbeat.music.persistence.MusicPersistence;
 import kr.heartbeat.vo.PlaylistDTO;
 import org.apache.ibatis.session.SqlSession;
@@ -34,7 +33,8 @@ public class MusicServiceImpl implements MusicService {
     }
 
     @Override
-    public List<PlaylistDTO> findAllMusicAjax(List<String> hashtags){
-        return musicPersistence.findAllMusicAjax(hashtags);
+    public List<PlaylistDTO> findAllMusicAjax(String hashtag1, String hashtag2, String hashtag3){
+        //System.out.println("************* 선택된 해시태그들의 값(MusicServiceImpl) : 해시태그1 " + hashtag1 + ", 해시태그2 " + hashtag2 + ", 해스태그3 " + hashtag3);
+        return musicPersistence.findAllMusicAjax(hashtag1, hashtag2, hashtag3);
     }
 }

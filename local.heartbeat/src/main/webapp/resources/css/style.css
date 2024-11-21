@@ -167,9 +167,11 @@ br.mob{display:none}
 .playlist .section-list .listName{margin-bottom:10px;font-size:16px;font-weight:500}
 .playlist .section-list .check{margin-right:10px}
 .playlist .section-list .btnWrap{display:flex;justify-content:flex-end;margin-bottom:10px}
-.playlist .section-list .itemWrap{display:flex;flex-wrap:wrap}
-.playlist .section-list .itemWrap .item{width:50%}
-.playlist .section-list .itemWrap .all{width:100%}
+.playlist .section-list .listBx .itemWrap{display:flex;flex-wrap:wrap}
+.playlist .section-list .listBx .itemWrap .item{width:50%}
+.playlist .section-list .listBx .itemWrap .item:nth-child(1),
+.playlist .section-list .listBx .itemWrap .item:nth-child(2){margin-top:0}
+.playlist .section-list .listBx .itemWrap .all{width:100%}
 
 /*커뮤니티*/
 .community .section-artist .tit{margin-bottom:20px;font-size:18px;font-weight:500}

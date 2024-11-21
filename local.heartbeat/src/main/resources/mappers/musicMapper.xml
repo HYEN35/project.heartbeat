@@ -5,44 +5,6 @@
 
 <mapper namespace="kr.heartbeat.mappers.music">
 
-	<select id="getMusicListByHashtags" parameterType="list" resultType="kr.heartbeat.vo.MusicVO">
-		SELECT
-			m.music_id,
-			m.music_name,
-			m.track,
-			m.playtime,
-			a.artist_id,
-			a.art_name,
-			a.fan,
-			a.art_img
-		FROM
-			hashtag_tbl h
-		JOIN
-			music_tbl m ON h.music_id = m.music_id
-		JOIN
-			artist_tbl a ON m.artist_id = a.artist_id
-		WHERE
-			h.hashtag_id IN
-		<foreach collection="list" item="id" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</select>
-
-	<select id="findMusicByHashtags" parameterType="list" resultType="kr.heartbeat.vo.MusicVO">
-		SELECT *
-		FROM music_tbl m
-		JOIN hashtag_tbl h ON m.music_id = h.music_id
-		WHERE h.hashtag_id IN
-		<foreach item="id" collection="list" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</select>
-
-	<select id="findAllMusic" parameterType="list" resultType="kr.heartbeat.vo.MusicVO">
-		SELECT * FROM music_tbl
-	</select>
-
-
 	<resultMap id="musicResultMap" type="kr.heartbeat.vo.PlaylistDTO">
 		<id property="music_id" column="music_id"/>
 		<result property="artist_id" column="artist_id"/>
@@ -55,7 +17,7 @@
 		<result property="hashtag_name" column="hashtag_name"/>
 	</resultMap>
 
-	<select id="findAllMusicAjax" parameterType="list" resultMap="musicResultMap">
+	<select id="findAllMusicAjax" parameterType="map" resultMap="musicResultMap">
 		SELECT DISTINCT
 			m.music_id,
 			m.artist_id,
@@ -72,14 +34,13 @@
 			artist_tbl a ON m.artist_id = a.artist_id
 		JOIN
 			hashtag_tbl h ON m.music_id = h.music_id
-		<where>
-			<if test="hashtags != null and hashtags.size() > 0">
-				h.hashtag_name IN
-				<foreach item="hashtag" collection="hashtags.split(',')" open="(" separator="," close=")">
-					#{hashtag, jdbcType=VARCHAR}
-				</foreach>
-			</if>
-		</where>
+		WHERE
+			<if test="hashtag1 != null"> h.hashtag_name = #{hashtag1} </if>
+			<if test="hashtag2 != null"> OR h.hashtag_name = #{hashtag2} </if>
+			<if test="hashtag3 != null"> OR h.hashtag_name = #{hashtag3} </if>
+		GROUP BY
+			m.music_id
+		LIMIT 10
 	</select>
 
 </mapper>

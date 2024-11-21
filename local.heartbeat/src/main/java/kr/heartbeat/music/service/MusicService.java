@@ -15,6 +15,6 @@ public interface MusicService {
 
 	List<MusicVO> findAllMusic();
 
-	List<PlaylistDTO> findAllMusicAjax(List<String> hashtags);
+	public List<PlaylistDTO> findAllMusicAjax(String hashtag1, String hashtag2, String hashtag3);
 
 }

@@ -1,20 +1,13 @@
 package kr.heartbeat.music.controller;
 import kr.heartbeat.music.persistence.MusicPersistence;
-import kr.heartbeat.music.service.HashtagRequest;
-import kr.heartbeat.music.service.HashtagService;
 import kr.heartbeat.music.service.MusicService;
-import kr.heartbeat.vo.HashtagVO;
-import kr.heartbeat.vo.MusicVO;
 import kr.heartbeat.vo.PlaylistDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Controller
@@ -23,57 +16,35 @@ public class MusicController {
 	private SqlSession sqlSession;
 
 	@Autowired
-	private HashtagService hashtagService;
-
-	@Autowired
 	private MusicService musicService;
 
 	@Autowired
 	private MusicPersistence musicPersistence;
 
-	// 해시태그에 맞는 음악 리스트를 가져오는 메서드
-	/*@RequestMapping("/music/playlist")
-	public String findMusic(Model model) {
-		model.addAttribute("musicList", musicService.findAllMusic());
-		return "heartbeat/playlist";
-	}*/
-
-	/*@GetMapping("/music/playlist")
-	@ResponseBody
-	public List<PlaylistDTO> allPlaylist() {
-		List<PlaylistDTO> musicList = musicService.findAllMusicAjax();
-		return musicList;
-	}*/
-
-	/*@GetMapping("/music/playlist")
-	@ResponseBody
-	public String allPlaylist(@RequestParam("hashtags[]") String[] hashtags, Model model) {
-		System.out.println("*************태그확인하기************");
-		System.out.println("*************Selected Hashtags: " + Arrays.asList(hashtags));
-
-		List<PlaylistDTO> musicList = musicService.findAllMusicAjax(Arrays.asList(hashtags));
-		model.addAttribute("musicList", musicList);
-
-		return "heartbeat/playlist";
-	}*/
-
 	@GetMapping("/music/playlist")
 	@ResponseBody
-	public List<PlaylistDTO> allPlaylist(@RequestParam(value = "hashtags[]", required = false) String hashtags) {
-		System.out.println("************* 선택된 해시태그 값 : " + hashtags);
+	public HashMap<String, Object> allPlaylist(HttpServletRequest request) {
 
-		if (hashtags == null || hashtags.isEmpty()) {
-			System.out.println("********** 선택된 해시태그가 없습니다 **********");
-			return new ArrayList<>();
-		}
+		// 개별 해시태그 값 받아오기
+		String hashtag1 = request.getParameter("hashtag1");
+		String hashtag2 = request.getParameter("hashtag2");
+		String hashtag3 = request.getParameter("hashtag3");
 
-		//List<PlaylistDTO> musicList = musicService.findAllMusicAjax(hashtags);
-		//return musicList;
-		List<String> hashtagList = Arrays.asList(hashtags.split(","));
-		List<PlaylistDTO> musicList = musicService.findAllMusicAjax(hashtagList);
+		//System.out.println("************* 선택된 해시태그들의 값 : 해시태그1 " + hashtag1 + ", 해시태그2 " + hashtag2 + ", 해스태그3 " + hashtag3);
 
-		System.out.println("Hashtag List: " + hashtagList);
+		List<PlaylistDTO> playlistDTO = musicPersistence.findAllMusicAjax(hashtag1, hashtag2, hashtag3);
 
-		return musicList;
+		HashMap<String, Object> response = new HashMap<String, Object>();
+
+		// null 체크
+		/*if (playlistDTO == null) {
+			System.out.println("******* 반환된 PlaylistDTO가 null입니다.");
+		} else {
+			System.out.println("******* 반환된 PlaylistDTO: " + playlistDTO);
+		}*/
+		//System.out.println("******* 해시태그(MusicController) : " + response);
+		response.put("playlist", playlistDTO);
+		return response;
 	}
+
 }

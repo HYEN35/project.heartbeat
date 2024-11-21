@@ -4,7 +4,6 @@ import com.wrapper.spotify.model_objects.specification.AlbumSimplified;
 
 import com.wrapper.spotify.model_objects.specification.Paging;
 import com.wrapper.spotify.model_objects.specification.Track;
-import kr.heartbeat.music.persistence.HashtagPersistence;
 import kr.heartbeat.music.persistence.MusicPersistence;
 import kr.heartbeat.vo.MusicVO;
 import org.apache.ibatis.session.SqlSession;
@@ -28,9 +27,6 @@ public class SpotifyServiceImpl implements SpotifyService {
 
     @Autowired
     private SpotifyPersistence spotifyPersistence;
-
-	@Autowired
-    private HashtagPersistence hashtagPersistence;
 
 	@Autowired
 	private MusicPersistence musicPersistence;
